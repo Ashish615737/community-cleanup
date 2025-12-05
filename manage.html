@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Events</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        .navbar {
+            background-color: #2d2d2d;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+
+        .navbar-light .navbar-nav .nav-link:hover {
+            color: #00aaff;
+        }
+
+        .carousel-inner img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .carousel-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .carousel-item .text-center {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-custom {
+            height: 30px;
+            border-radius: 5px;
+        }
+
+        .input-group-text {
+            background-color: #e6f7ff;
+        }
+
+        .marks-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .marks-input input {
+            width: 120px;
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+        }
+
+        .marks-input i {
+            cursor: pointer;
+            color: #007bff;
+            font-size: 1.25rem;
+        }
+
+        .marks-input i:hover {
+            color: #0056b3;
+        }
+
+        .volunteer-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 280px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .volunteer-card:hover {
+            transform: scale(1.05);
+        }
+
+        .volunteer-card h5 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .volunteer-card p {
+            font-size: 1.1rem;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .complete-btn {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            background-color: #28a745;
+            border: none;
+            padding: 15px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .complete-btn:hover {
+            background-color: #218838;
+        }
+
+        .back-btn {
+            background-color: #ff9800;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #e68900;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        .volunteers-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        #eventCarousel {
+            margin-bottom: 40px;
+        }
+
+        .progress-chart-container {
+            margin-top: 40px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Event Management</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="volunteer-add.html">Add Volunteer</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Event Slider (Ongoing & Past Events) -->
+        <div id="eventCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="text-center">
+                        <h4>Ongoing Events</h4>
+                    </div>
+                    <div id="ongoingEvents" class="volunteers-list">
+                        <!-- Ongoing Events will be populated here -->
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="text-center">
+                        <h4>Past Events</h4>
+                    </div>
+                    <div id="pastEvents" class="volunteers-list">
+                        <!-- Past Events will be populated here -->
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#eventCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+        <!-- Event Name Selection and Volunteer Details -->
+        <div class="mt-4">
+            <div class="mb-3">
+                <label for="eventSelect" class="form-label">Select Event</label>
+                <select class="form-control" id="eventSelect" onchange="loadEventDetails()" required>
+                    <option value="">Select an Event</option>
+                    <!-- Options will be populated dynamically -->
+                </select>
+            </div>
+
+            <!-- Volunteer List and Progress -->
+            <div id="volunteersList" class="mt-4">
+                <h4>Volunteers for Event</h4>
+                <!-- Volunteer list and input for marks will go here -->
+            </div>
+
+            <!-- Complete Drive Section with Graph -->
+            <div class="progress-chart-container">
+                <h4>Drive Progress</h4>
+                <canvas id="progressChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Complete Drive Button -->
+            <button id="completeDriveBtn" class="complete-btn" style="display: none;" onclick="completeDrive()">Complete Drive</button>
+        </div>
+
+        <!-- Back to Admin Button -->
+        <button onclick="window.location.href='admin.html'" class="back-btn mt-4">Back to Admin</button>
+    </div>
+
+    <script>
+        let progressChart = null;  // To store chart instance
+
+        // Load events and display ongoing/past events
+        function loadEvents() {
+            const ongoingEventsContainer = document.getElementById('ongoingEvents');
+            const pastEventsContainer = document.getElementById('pastEvents');
+            const events = JSON.parse(localStorage.getItem('events')) || [];
+
+            ongoingEventsContainer.innerHTML = '';
+            pastEventsContainer.innerHTML = '';
+
+            events.forEach(event => {
+                const eventHtml = `
+                    <div class="volunteer-card">
+                        <h5>${event.name}</h5>
+                        <p>Status: ${event.status}</p>
+                    </div>
+                `;
+
+                if (event.status === 'Ongoing') {
+                    ongoingEventsContainer.innerHTML += eventHtml;
+                } else {
+                    pastEventsContainer.innerHTML += eventHtml;
+                }
+            });
+        }
+
+        // Load event options in dropdown
+        function loadEventOptions() {
+            const eventSelect = document.getElementById('eventSelect');
+            const events = JSON.parse(localStorage.getItem('events')) || [];
+            eventSelect.innerHTML = '<option value="">Select an Event</option>';
+
+            events.forEach(event => {
+                const option = document.createElement('option');
+                option.value = event.name;
+                option.textContent = event.name;
+                eventSelect.appendChild(option);
+            });
+        }
+
+        // Load details of volunteers for a selected event
+        function loadEventDetails() {
+            const eventSelect = document.getElementById('eventSelect').value;
+            const volunteersList = document.getElementById('volunteersList');
+            const volunteers = JSON.parse(localStorage.getItem('volunteers')) || [];
+            const eventVolunteers = volunteers.filter(v => v.eventSelect === eventSelect);
+
+            volunteersList.innerHTML = '';
+
+            if (eventVolunteers.length > 0) {
+                eventVolunteers.forEach(volunteer => {
+                    const volunteerHtml = `
+                        <div class="marks-input">
+                            <input type="number" data-volunteer="${volunteer.volunteerName}" value="${volunteer.marks || 0}" oninput="updateMarks('${volunteer.volunteerName}')">
+                            <i class="bi bi-check-circle" onclick="updateMarks('${volunteer.volunteerName}')"></i>
+                        </div>
+                    `;
+                    volunteersList.innerHTML += volunteerHtml;
+                });
+
+                loadProgressChart(eventVolunteers);
+                document.getElementById('completeDriveBtn').style.display = 'block';
+            } else {
+                volunteersList.innerHTML = '<p>No volunteers found for this event.</p>';
+                document.getElementById('completeDriveBtn').style.display = 'none';
+                if (progressChart) {
+                    progressChart.destroy();
+                }
+            }
+        }
+
+        // Update volunteer marks and refresh chart
+        function updateMarks(volunteerName) {
+            const volunteers = JSON.parse(localStorage.getItem('volunteers')) || [];
+            const volunteer = volunteers.find(v => v.volunteerName === volunteerName);
+
+            const newMarks = document.querySelector(`[data-volunteer="${volunteerName}"]`).value;
+            volunteer.marks = Number(newMarks); // Ensure marks are stored as numbers
+
+            localStorage.setItem('volunteers', JSON.stringify(volunteers));
+
+            // Refresh the chart with updated data
+            const eventVolunteers = volunteers.filter(v => v.eventSelect === document.getElementById('eventSelect').value);
+            loadProgressChart(eventVolunteers);
+        }
+
+        // Load progress chart for the event
+        function loadProgressChart(volunteers) {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+
+            if (progressChart) {
+                progressChart.destroy(); // Clear previous chart instance
+            }
+
+            progressChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: volunteers.map(v => v.volunteerName),
+                    datasets: [{
+                        label: 'Marks',
+                        data: volunteers.map(v => v.marks),
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Complete the drive
+        function completeDrive() {
+            alert('Drive Completed! Thank you for your contribution.');
+        }
+
+        // Initial load
+        loadEvents();
+        loadEventOptions();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
